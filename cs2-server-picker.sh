@@ -34,7 +34,7 @@ function _get-arguments() {
          while getopts "lp:fh" opt
          do
             case $opt in
-            l)      _list-rules
+            l)      _list-servers
                     ;;
             p)      _add-rules "$OPTARG"
                     ;;
@@ -47,7 +47,7 @@ function _get-arguments() {
      fi         
 }
 
-function _list-rules {
+function _list-servers {
     echo  "downloading json..."
     _get-json
     echo "Servers:"
