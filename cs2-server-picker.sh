@@ -19,9 +19,9 @@ function _show-help {
     echo "Server picker script for CS2 matchmaking. Uses iptables rules, curl and jq."
     echo "  -l   list servers"
     echo "  -p   pick server, usage:"
-    echo "       ${0##*/} -p hel"
+    echo "       ${0##*/} -p tyo"
     echo "       or multpiple servers:"
-    echo "       ${0##*/} -p seo,tyo,tyo1"
+    echo "       ${0##*/} -p hel,sto"
     echo "  -f   flush added iptables rules"
     exit 0
 }
