@@ -19,10 +19,14 @@ function _show-help {
     echo "Server picker script for CS2 matchmaking. Uses iptables rules, curl and jq."
     echo "  -l   list servers"
     echo "  -p   pick server, usage:"
-    echo "       ${0##*/} -p tyo"
+    echo "       ${0##*/} -p hel"
     echo "       or multpiple servers:"
-    echo "       ${0##*/} -p hel,sto"
+    echo "       ${0##*/} -p seo,tyo"
     echo "  -f   flush added iptables rules"
+    echo "  -P   ping servers, usage"
+    echo "       ${0##*/} -P hel"
+    echo "       or multpiple servers:"
+    echo "       ${0##*/} -P seo,tyo"
     exit 0
 }
 
@@ -31,7 +35,7 @@ function _get-arguments() {
      then
          _show-help
      else
-         while getopts "lp:fh" opt
+         while getopts "lpP:fh" opt
          do
             case $opt in
             l)      _list-servers
@@ -39,6 +43,8 @@ function _get-arguments() {
             p)      _add-rules "$OPTARG"
                     ;;
             f)      _flush-rules
+                    ;;
+            P)      _ping "$OPTARG"
                     ;;
             *)      _show-help
                     ;;
@@ -87,6 +93,21 @@ function _flush-rules {
    sudo iptables -F cs2-server-picker-rules > /dev/null 2>/dev/null
    sudo iptables -D INPUT -j cs2-server-picker-rules > /dev/null 2>/dev/null
    sudo iptables -X cs2-server-picker-rules > /dev/null 2>/dev/null
+}
+
+function _ping {
+   _flush-rules
+   echo  "downloading json..."
+   _get-json
+   _get-server-list > $tmplist
+   IFS=',' read -r -a arr <<< "$@"
+   for i in "${arr[@]}"
+   do
+      grep -qFx "$i" $tmplist "$OPTARG"|| ( echo "Error: \"$i\" is the incorrent server" ; exit 1 )
+      ping_ip=$( _get-server-ip-list "$i" | shuf | head -1 )
+      echo "***ping to $i***"
+      ping -c 4 "$ping_ip"
+   done
 }
 
 _get-arguments "$@"
