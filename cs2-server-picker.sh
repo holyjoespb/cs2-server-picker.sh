@@ -103,7 +103,7 @@ function _ping {
    IFS=',' read -r -a arr <<< "$@"
    for i in "${arr[@]}"
    do
-      grep -qFx "$i" $tmplist "$OPTARG"|| ( echo "Error: \"$i\" is the incorrent server" ; exit 1 )
+      grep -qFx "$i" $tmplist || ( echo "Error: \"$i\" is the incorrent server" ; exit 1 )
       ping_ip=$( _get-server-ip-list "$i" | shuf | head -1 )
       echo "***ping to $i***"
       ping -c 4 "$ping_ip"
