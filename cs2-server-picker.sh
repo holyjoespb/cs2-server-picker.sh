@@ -35,7 +35,7 @@ function _get-arguments() {
      then
          _show-help
      else
-         while getopts "lpP:fh" opt
+         while getopts "lp:P:fh" opt
          do
             case $opt in
             l)      _list-servers
